@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using Example.MQ.Domain;
 
-namespace OneWay.MQ.Client
+namespace Worker.MQ.Client
 {
     class Program
     {
-        private const string Exchange = "OnewayExchange";
-        private const string Queue = "OnewayQueue";
+        private const string Exchange = "WorkerExchange";
+        private const string Worker1Queue = "Worker1Queue";
         
         static void Main()
         {
@@ -24,12 +24,11 @@ namespace OneWay.MQ.Client
                     Exchange = Exchange,
                     Queues = new List<string>
                     {
-                        Queue
+                        Worker1Queue
                     }
                 }
             });
             Console.WriteLine("Press enter key to send a message");
-            
             while (true)
             {
                 var line = Console.ReadLine();

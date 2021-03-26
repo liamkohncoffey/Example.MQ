@@ -1,16 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using RabbitMQ.Client;
 
-namespace OneWay.MQ.Client
+namespace Example.MQ.Domain
 {
     public class RabbitSender : IDisposable
     {
         private const string HostName = "localhost";
         private const string UserName = "guest";
         private const string Password = "guest";
-        private const string QueueName = "myQueueFromCode";
-        private const string ExchangeName = "myExchangeFromCode";
         private const bool IsDurable = true;
         private const string VirtualHost = "";
         private int Port = 0;
@@ -31,8 +30,6 @@ namespace OneWay.MQ.Client
             Console.WriteLine("Host: {0}", HostName);
             Console.WriteLine("Username: {0}", UserName);
             Console.WriteLine("Password: {0}", Password);
-            Console.WriteLine("QueueName: {0}", QueueName);
-            Console.WriteLine("ExchangeName: {0}", ExchangeName);
             Console.WriteLine("VirtualHost: {0}", VirtualHost);
             Console.WriteLine("Port: {0}", Port);
             Console.WriteLine("Is Durable: {0}", IsDurable);
@@ -54,18 +51,27 @@ namespace OneWay.MQ.Client
 
             _connection = _connectionFactory.CreateConnection();
             _model = _connection.CreateModel();
-            
-            _model.QueueDeclare(QueueName, true, false, false, null);
-            Console.WriteLine("Queue Created");
-            
-            _model.ExchangeDeclare(ExchangeName, ExchangeType.Fanout);
-            Console.WriteLine("Exchange Created");
-            
-            _model.QueueBind(QueueName, ExchangeName, "RK");
-            Console.WriteLine("Exchange Bound To Key");
         }
 
-        public void Send(string message)
+        public void SetupExchangeAndQueue(IEnumerable<RabbitMqSetup> rabbitMqSetups)
+        {
+            foreach (var rabbitMqSetup in rabbitMqSetups)
+            {
+                _model.ExchangeDeclare(rabbitMqSetup.Exchange, ExchangeType.Fanout);
+                Console.WriteLine("Exchange Created");
+                
+                foreach (var queue in rabbitMqSetup.Queues)
+                {
+                    _model.QueueDeclare(queue, true, false, false, null);
+                    Console.WriteLine("Queue Created");
+                    
+                    _model.QueueBind(queue, rabbitMqSetup.Exchange, "RK");
+                    Console.WriteLine("Exchange Bound To Key");
+                }
+            }
+        }
+
+        public void Send(string message, string exchange)
         {
             //Setup properties
             var properties = _model.CreateBasicProperties();
@@ -75,7 +81,7 @@ namespace OneWay.MQ.Client
             byte[] messageBuffer = Encoding.Default.GetBytes(message);
 
             //Send message
-            _model.BasicPublish(ExchangeName, QueueName, properties, messageBuffer);
+            _model.BasicPublish(exchange, "RK", properties, messageBuffer);
         }
 
         /// <summary>

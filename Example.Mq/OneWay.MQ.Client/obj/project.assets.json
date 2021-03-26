@@ -32,6 +32,19 @@
         "runtime": {
           "lib/netcoreapp3.0/System.Threading.Channels.dll": {}
         }
+      },
+      "Example.MQ.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "dependencies": {
+          "RabbitMQ.Client": "6.2.1"
+        },
+        "compile": {
+          "bin/placeholder/Example.MQ.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Example.MQ.Domain.dll": {}
+        }
       }
     }
   },
@@ -101,10 +114,16 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "Example.MQ.Domain/1.0.0": {
+      "type": "project",
+      "path": "../Example.MQ.Domain/Example.MQ.Domain.csproj",
+      "msbuildProject": "../Example.MQ.Domain/Example.MQ.Domain.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
+      "Example.MQ.Domain >= 1.0.0",
       "RabbitMQ.Client >= 6.2.1"
     ]
   },
@@ -137,7 +156,11 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "projectReferences": {}
+          "projectReferences": {
+            "/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/Example.Mq/Example.MQ.Domain/Example.MQ.Domain.csproj": {
+              "projectPath": "/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/Example.Mq/Example.MQ.Domain/Example.MQ.Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

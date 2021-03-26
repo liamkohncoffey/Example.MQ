@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using Example.MQ.Domain;
 
-namespace OneWay.MQ.Client
+namespace PubSub.MQ.Client
 {
     class Program
     {
-        private const string Exchange = "OnewayExchange";
-        private const string Queue = "OnewayQueue";
+        private const string Exchange = "PubSubExchange";
+        private const string PubSub1Queue = "PubSub1Queue";
+        private const string PubSub2Queue = "PubSub2Queue";
         
         static void Main()
         {
@@ -24,7 +25,8 @@ namespace OneWay.MQ.Client
                     Exchange = Exchange,
                     Queues = new List<string>
                     {
-                        Queue
+                        PubSub1Queue,
+                        PubSub2Queue
                     }
                 }
             });

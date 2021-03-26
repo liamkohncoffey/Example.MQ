@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "SPocICupIzdmsBBH92ul6VfU2ZXXmGeW3uSHIzdLxAOyw2ekJGDZQcnCo9OjjRj4WyNhWiMRAjdeb+L+Lk59bQ==",
+  "dgSpecHash": "IqZGQX07iU2fNL3SBpRH0SdhH6eyXyqQT3L3TJVAHgkLN9RovUjhzkKMnzBiMZ4sm7VVznxh7b7Jph3aAIXxTw==",
   "success": true,
   "projectFilePath": "/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/Example.Mq/OneWay.MQ.Server/OneWay.MQ.Server.csproj",
   "expectedPackageFiles": [

@@ -1,7 +1,7 @@
 ﻿using System;
 using Example.MQ.Domain;
 
-namespace ShipWreck.MQ.Server
+namespace PubSub2.MQ.Server
 {
     class Program
     {
@@ -14,7 +14,7 @@ namespace ShipWreck.MQ.Server
             var queueProcessor = new RabbitConsumer()
             {
                 Enabled = true,
-                Queue = "OnewayQueue"
+                Queue = "PubSub2Queue"
             };
             queueProcessor.Start();
             Console.ReadLine();

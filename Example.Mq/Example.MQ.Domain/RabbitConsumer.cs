@@ -3,7 +3,7 @@ using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace ShipWreck.MQ.Server
+namespace Example.MQ.Domain
 {
     /// <summary>
     /// Class to encapsulate recieving messages from RabbitMQ
@@ -13,8 +13,6 @@ namespace ShipWreck.MQ.Server
         private const string HostName = "localhost";
         private const string UserName = "guest";
         private const string Password = "guest";
-        private const string QueueName = "myQueueFromCode";
-        private const string ExchangeName = "myExchangeFromCode";
         private const bool IsDurable = true;
         //The two below settings are just to illustrate how they can be used but we are not using them in
         //this sample as we will use the defaults
@@ -24,7 +22,8 @@ namespace ShipWreck.MQ.Server
         public delegate void OnReceiveMessage(string message);
 
         public bool Enabled { get; set; }
-    
+        public string Queue { get; set; }
+
         private ConnectionFactory _connectionFactory;
         private IConnection _connection;
         private IModel _model;
@@ -60,8 +59,6 @@ namespace ShipWreck.MQ.Server
             Console.WriteLine("Host: {0}", HostName);
             Console.WriteLine("Username: {0}", UserName);
             Console.WriteLine("Password: {0}", Password);
-            Console.WriteLine("QueueName: {0}", QueueName);
-            Console.WriteLine("ExchangeName: {0}", ExchangeName);
             Console.WriteLine("VirtualHost: {0}", VirtualHost);
             Console.WriteLine("Port: {0}", Port);
             Console.WriteLine("Is Durable: {0}", IsDurable);
@@ -72,12 +69,12 @@ namespace ShipWreck.MQ.Server
         public void Start()
         {
             var consumer = new EventingBasicConsumer(_model);
-            _model.BasicConsume(QueueName, false, consumer);
+            _model.BasicConsume(Queue, false, consumer);
 
             while (true)
             {
                 //Get next message
-                var basicGet = consumer.Model.BasicGet(QueueName, true);
+                var basicGet = consumer.Model.BasicGet(Queue, true);
                 if (basicGet != null)
                 {
                     var message = Encoding.Default.GetString(basicGet.Body.Span);

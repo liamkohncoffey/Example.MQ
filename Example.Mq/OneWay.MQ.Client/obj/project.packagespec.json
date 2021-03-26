@@ -19,7 +19,11 @@
     },
     "frameworks": {
       "netcoreapp3.1": {
-        "projectReferences": {}
+        "projectReferences": {
+          "/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/Example.Mq/Example.MQ.Domain/Example.MQ.Domain.csproj": {
+            "projectPath": "/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/Example.Mq/Example.MQ.Domain/Example.MQ.Domain.csproj"
+          }
+        }
       }
     },
     "warningProperties": {
