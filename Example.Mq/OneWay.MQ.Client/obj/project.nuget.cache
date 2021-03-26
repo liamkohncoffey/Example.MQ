@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "74OLDTvQOxzdfCDlfD0h3QBwY6FDQa19DjQrHIiceTgLOPQPYPInTAEw6JFVLWwfbNwfzgwj78qi2SgXQRSVdg==",
+  "success": true,
+  "projectFilePath": "/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/Example.Mq/OneWay.MQ.Client/OneWay.MQ.Client.csproj",
+  "expectedPackageFiles": [
+    "/Users/liamcoffey/.nuget/packages/rabbitmq.client/6.2.1/rabbitmq.client.6.2.1.nupkg.sha512",
+    "/Users/liamcoffey/.nuget/packages/system.memory/4.5.4/system.memory.4.5.4.nupkg.sha512",
+    "/Users/liamcoffey/.nuget/packages/system.threading.channels/4.7.1/system.threading.channels.4.7.1.nupkg.sha512"
+  ],
+  "logs": []
+}

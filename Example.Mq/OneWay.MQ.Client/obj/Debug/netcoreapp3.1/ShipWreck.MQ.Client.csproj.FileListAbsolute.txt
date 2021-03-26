@@ -1,0 +1,15 @@
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.MQ.Client/bin/Debug/netcoreapp3.1/ShipWreck.MQ.Client.deps.json
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.MQ.Client/bin/Debug/netcoreapp3.1/ShipWreck.MQ.Client.runtimeconfig.json
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.MQ.Client/bin/Debug/netcoreapp3.1/ShipWreck.MQ.Client.runtimeconfig.dev.json
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.MQ.Client/bin/Debug/netcoreapp3.1/ShipWreck.MQ.Client.dll
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.MQ.Client/bin/Debug/netcoreapp3.1/ShipWreck.MQ.Client.pdb
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.MQ.Client/bin/Debug/netcoreapp3.1/RabbitMQ.Client.dll
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.MQ.Client/bin/Debug/netcoreapp3.1/System.Threading.Channels.dll
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.MQ.Client/obj/Debug/netcoreapp3.1/ShipWreck.MQ.Client.csprojAssemblyReference.cache
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.MQ.Client/obj/Debug/netcoreapp3.1/ShipWreck.MQ.Client.csproj.CoreCompileInputs.cache
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.MQ.Client/obj/Debug/netcoreapp3.1/ShipWreck.MQ.Client.AssemblyInfoInputs.cache
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.MQ.Client/obj/Debug/netcoreapp3.1/ShipWreck.MQ.Client.AssemblyInfo.cs
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.MQ.Client/obj/Debug/netcoreapp3.1/ShipWreck.MQ.Client.csproj.CopyComplete
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.MQ.Client/obj/Debug/netcoreapp3.1/ShipWreck.MQ.Client.dll
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.MQ.Client/obj/Debug/netcoreapp3.1/ShipWreck.MQ.Client.pdb
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.MQ.Client/obj/Debug/netcoreapp3.1/ShipWreck.MQ.Client.genruntimeconfig.cache

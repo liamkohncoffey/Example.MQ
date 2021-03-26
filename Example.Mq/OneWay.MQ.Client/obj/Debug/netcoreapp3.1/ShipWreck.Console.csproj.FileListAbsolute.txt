@@ -1,0 +1,4 @@
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.Console/obj/Debug/netcoreapp3.1/ShipWreck.Console.csprojAssemblyReference.cache
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.Console/obj/Debug/netcoreapp3.1/ShipWreck.Console.csproj.CoreCompileInputs.cache
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.Console/obj/Debug/netcoreapp3.1/ShipWreck.Console.AssemblyInfoInputs.cache
+/Users/liamcoffey/git/personal/Services/ShipWrecks.MQ/ShipWreck.Console/ShipWreck.Console/obj/Debug/netcoreapp3.1/ShipWreck.Console.AssemblyInfo.cs
