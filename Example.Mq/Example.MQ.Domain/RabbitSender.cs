@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 
 namespace Example.MQ.Domain
 {
@@ -13,10 +14,13 @@ namespace Example.MQ.Domain
         private const bool IsDurable = true;
         private const string VirtualHost = "";
         private int Port = 0;
+        private string _responseQueue = "TempQueue";
 
         private ConnectionFactory _connectionFactory;
         private IConnection _connection;
         private IModel _model;
+        private IBasicConsumer _consumer;
+        
 
 
         public RabbitSender()
@@ -51,6 +55,10 @@ namespace Example.MQ.Domain
 
             _connection = _connectionFactory.CreateConnection();
             _model = _connection.CreateModel();
+            
+            //Create dynamic response queue
+            _consumer = new EventingBasicConsumer(_model);
+            _model.BasicConsume(_responseQueue, false, _consumer);
         }
 
         public void SetupExchangeAndQueue(IEnumerable<RabbitMqSetup> rabbitMqSetups)
@@ -82,6 +90,37 @@ namespace Example.MQ.Domain
 
             //Send message
             _model.BasicPublish(exchange, "RK", properties, messageBuffer);
+        }
+        
+        public string SendWithAck(string message, string exchange, TimeSpan timeout)
+        {
+            var correlationToken = Guid.NewGuid().ToString();
+
+            //Setup properties
+            var properties = _model.CreateBasicProperties();
+            properties.ReplyTo = _responseQueue;
+            properties.CorrelationId = correlationToken;
+
+            //Serialize
+            byte[] messageBuffer = Encoding.Default.GetBytes(message);
+
+            //Send
+            var timeoutAt = DateTime.Now + timeout;
+            _model.BasicPublish(exchange, "RK", properties, messageBuffer);
+
+            //Wait for response
+            while (DateTime.Now <= timeoutAt)
+            {
+                var basicGet = _consumer.Model.BasicGet(_responseQueue, true);
+                if (basicGet != null && basicGet.BasicProperties.CorrelationId == correlationToken)
+                {
+                    var response = Encoding.Default.GetString(basicGet.Body.Span);
+                    _model.ExchangeDelete(_responseQueue);
+                    _model.QueueDelete(_responseQueue);
+                    return response;
+                }
+            }
+            throw new TimeoutException(@"The response was not returned before the timeout");
         }
 
         /// <summary>

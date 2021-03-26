@@ -84,6 +84,33 @@ namespace Example.MQ.Domain
             }
         }
         
+        public void StartWithAck()
+        {
+            var consumer = new EventingBasicConsumer(_model);
+            _model.BasicConsume(Queue, false, consumer);
+
+            while (Enabled)
+            {
+                var basicGet = consumer.Model.BasicGet(Queue, true);
+                if (basicGet != null)
+                {
+                    var message = Encoding.Default.GetString(basicGet.Body.Span);
+                    
+                    Console.WriteLine("Message Recieved - {0}", message);
+                    var response = $"Processed message - {message} : Response is good";
+
+                    //Send Response
+                    var replyProperties = _model.CreateBasicProperties();
+                    replyProperties.CorrelationId = basicGet.BasicProperties.CorrelationId;
+                    byte[] messageBuffer = Encoding.Default.GetBytes(response);
+                    _model.ExchangeDeclare(basicGet.BasicProperties.ReplyTo, ExchangeType.Direct);
+                    _model.QueueDeclare(basicGet.BasicProperties.ReplyTo, false, false, false, null);
+                    _model.QueueBind(basicGet.BasicProperties.ReplyTo, basicGet.BasicProperties.ReplyTo, "RK");
+                    _model.BasicPublish(basicGet.BasicProperties.ReplyTo, "RK", replyProperties, messageBuffer);
+                }
+            }
+        }
+        
         /// <summary>
         /// Dispose
         /// </summary>

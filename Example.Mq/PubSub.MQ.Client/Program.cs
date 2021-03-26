@@ -7,8 +7,8 @@ namespace PubSub.MQ.Client
     class Program
     {
         private const string Exchange = "PubSubExchange";
-        private const string PubSub1Queue = "PubSub1Queue";
-        private const string PubSub2Queue = "PubSub2Queue";
+        private const string PubSubQueue1 = "PubSubQueue1";
+        private const string PubSubQueue2 = "PubSubQueue2";
         
         static void Main()
         {
@@ -25,8 +25,8 @@ namespace PubSub.MQ.Client
                     Exchange = Exchange,
                     Queues = new List<string>
                     {
-                        PubSub1Queue,
-                        PubSub2Queue
+                        PubSubQueue1,
+                        PubSubQueue2
                     }
                 }
             });

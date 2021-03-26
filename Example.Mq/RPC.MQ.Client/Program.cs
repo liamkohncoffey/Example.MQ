@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using Example.MQ.Domain;
 
-namespace Worker.MQ.Client
+namespace RPC.MQ.Client
 {
     class Program
     {
-        private const string Exchange = "WorkerExchange";
-        private const string WorkerQueue1 = "WorkerQueue1";
+        private const string Exchange = "OnewayExchange";
+        private const string Queue = "OnewayQueue";
         
         static void Main()
         {
@@ -24,11 +24,13 @@ namespace Worker.MQ.Client
                     Exchange = Exchange,
                     Queues = new List<string>
                     {
-                        WorkerQueue1
+                        Queue
                     }
                 }
             });
+            
             Console.WriteLine("Press enter key to send a message");
+            
             while (true)
             {
                 var line = Console.ReadLine();
@@ -39,7 +41,7 @@ namespace Worker.MQ.Client
                 {
                     var message =  $"Message: {line} Count:{messageCount}";
                     Console.WriteLine($"Sending - {message}");
-                    sender.Send(message, Exchange);
+                    sender.SendWithAck(message, Exchange, new TimeSpan(0, 0, 3, 0));
                     messageCount++;
                 }
             }
