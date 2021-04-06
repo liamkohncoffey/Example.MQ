@@ -22,9 +22,13 @@ namespace OneWay.MQ.Client
                 new RabbitMqSetup
                 {
                     Exchange = Exchange,
-                    Queues = new List<string>
+                    QueueMqs = new List<QueuesMq>
                     {
-                        Queue
+                        new QueuesMq
+                        {
+                            Queue = Queue,
+                            RoutingKey = "RK"
+                        }
                     }
                 }
             });
@@ -40,7 +44,7 @@ namespace OneWay.MQ.Client
                 {
                     var message =  $"Message: {line} Count:{messageCount}";
                     Console.WriteLine($"Sending - {message}");
-                    sender.Send(message, Exchange);
+                    sender.Send(message, "RK", Exchange);
                     messageCount++;
                 }
             }

@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using Example.MQ.Domain;
 
-namespace PubSub.MQ.Client
+namespace OneWay.MQ.Client
 {
     class Program
     {
-        private const string Exchange = "PubSubExchange";
-        private const string PubSubQueue1 = "PubSubQueue1";
-        private const string PubSubQueue2 = "PubSubQueue2";
+        private const string Exchange = "RPCExchange";
+        private const string Queue = "RPCQueue";
         
         static void Main()
         {
@@ -27,17 +26,14 @@ namespace PubSub.MQ.Client
                     {
                         new QueuesMq
                         {
-                            Queue = PubSubQueue1,
-                            RoutingKey = "RK"
-                        },
-                        new QueuesMq
-                        {
-                            Queue = PubSubQueue2,
+                            Queue = Queue,
                             RoutingKey = "RK"
                         }
                     }
                 }
             });
+            sender.InitRpcClient();
+            
             Console.WriteLine("Press enter key to send a message");
             
             while (true)
@@ -50,7 +46,7 @@ namespace PubSub.MQ.Client
                 {
                     var message =  $"Message: {line} Count:{messageCount}";
                     Console.WriteLine($"Sending - {message}");
-                    sender.Send(message, "RK", Exchange);
+                    sender.SendWithResponse(message, "RK", Exchange);
                     messageCount++;
                 }
             }

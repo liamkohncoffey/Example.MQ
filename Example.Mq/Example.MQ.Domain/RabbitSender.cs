@@ -19,8 +19,9 @@ namespace Example.MQ.Domain
         private ConnectionFactory _connectionFactory;
         private IConnection _connection;
         private IModel _model;
-        private IBasicConsumer _consumer;
-        
+        private EventingBasicConsumer _consumer;
+        private string _replyQueueName;
+        private IBasicProperties _props;
 
 
         public RabbitSender()
@@ -55,10 +56,6 @@ namespace Example.MQ.Domain
 
             _connection = _connectionFactory.CreateConnection();
             _model = _connection.CreateModel();
-            
-            //Create dynamic response queue
-            _consumer = new EventingBasicConsumer(_model);
-            _model.BasicConsume(_responseQueue, false, _consumer);
         }
 
         public void SetupExchangeAndQueue(IEnumerable<RabbitMqSetup> rabbitMqSetups)
@@ -68,18 +65,51 @@ namespace Example.MQ.Domain
                 _model.ExchangeDeclare(rabbitMqSetup.Exchange, ExchangeType.Fanout);
                 Console.WriteLine("Exchange Created");
                 
-                foreach (var queue in rabbitMqSetup.Queues)
+                foreach (var queue in rabbitMqSetup.QueueMqs)
                 {
-                    _model.QueueDeclare(queue, true, false, false, null);
+                    _model.QueueDeclare(queue.Queue, true, false, false, null);
                     Console.WriteLine("Queue Created");
                     
-                    _model.QueueBind(queue, rabbitMqSetup.Exchange, "RK");
+                    _model.QueueBind(queue.Queue, rabbitMqSetup.Exchange, queue.RoutingKey);
                     Console.WriteLine("Exchange Bound To Key");
                 }
             }
         }
+        
+        public void InitRpcClient()
+        {
+            _replyQueueName = _model.QueueDeclare().QueueName;
+            
+            _consumer = new EventingBasicConsumer(_model);
 
-        public void Send(string message, string exchange)
+            _props = _model.CreateBasicProperties();
+            var correlationId = Guid.NewGuid().ToString();
+            _props.CorrelationId = correlationId;
+            _props.ReplyTo = _replyQueueName;
+
+            _consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var response = Encoding.UTF8.GetString(body);
+                if (ea.BasicProperties.CorrelationId == correlationId)
+                {
+                    Console.WriteLine($"Response Recieved: {response}");
+                }
+            };
+        }
+
+        public void SendWithResponse(string message, string routingKey, string exchange)
+        {
+            var messageBytes = Encoding.UTF8.GetBytes(message);
+            _model.BasicPublish(exchange, routingKey, _props, messageBytes);
+
+            _model.BasicConsume(
+                consumer: _consumer,
+                queue: _replyQueueName,
+                autoAck: true);
+        }
+        
+        public void Send(string message, string routingKey, string exchange)
         {
             //Setup properties
             var properties = _model.CreateBasicProperties();
@@ -89,38 +119,7 @@ namespace Example.MQ.Domain
             byte[] messageBuffer = Encoding.Default.GetBytes(message);
 
             //Send message
-            _model.BasicPublish(exchange, "RK", properties, messageBuffer);
-        }
-        
-        public string SendWithAck(string message, string exchange, TimeSpan timeout)
-        {
-            var correlationToken = Guid.NewGuid().ToString();
-
-            //Setup properties
-            var properties = _model.CreateBasicProperties();
-            properties.ReplyTo = _responseQueue;
-            properties.CorrelationId = correlationToken;
-
-            //Serialize
-            byte[] messageBuffer = Encoding.Default.GetBytes(message);
-
-            //Send
-            var timeoutAt = DateTime.Now + timeout;
-            _model.BasicPublish(exchange, "RK", properties, messageBuffer);
-
-            //Wait for response
-            while (DateTime.Now <= timeoutAt)
-            {
-                var basicGet = _consumer.Model.BasicGet(_responseQueue, true);
-                if (basicGet != null && basicGet.BasicProperties.CorrelationId == correlationToken)
-                {
-                    var response = Encoding.Default.GetString(basicGet.Body.Span);
-                    _model.ExchangeDelete(_responseQueue);
-                    _model.QueueDelete(_responseQueue);
-                    return response;
-                }
-            }
-            throw new TimeoutException(@"The response was not returned before the timeout");
+            _model.BasicPublish(exchange, routingKey, properties, messageBuffer);
         }
 
         /// <summary>

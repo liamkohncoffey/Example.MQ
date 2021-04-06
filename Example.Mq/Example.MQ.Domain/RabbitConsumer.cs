@@ -69,21 +69,62 @@ namespace Example.MQ.Domain
         public void Start()
         {
             var consumer = new EventingBasicConsumer(_model);
-            _model.BasicConsume(Queue, false, consumer);
-
-            while (true)
+            consumer.Received += (model, ea) =>
             {
-                //Get next message
-                var basicGet = consumer.Model.BasicGet(Queue, true);
-                if (basicGet != null)
-                {
-                    var message = Encoding.Default.GetString(basicGet.Body.Span);
-                    
-                    Console.WriteLine("Message Recieved - {0}", message);
-                }
-            }
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+                Console.WriteLine(" [x] {0}", message);
+            };
+            _model.BasicConsume(queue: Queue,
+                autoAck: true,
+                consumer: consumer);
+
+            Console.WriteLine(" Press [enter] to exit.");
+            Console.ReadLine();
         }
         
+        /// <summary>
+        /// Starts receiving a message from a queue
+        /// </summary>
+        public void StartAck()
+        {
+            var consumer = new EventingBasicConsumer(_model);
+            consumer.Received += (model, ea) =>
+            {
+                string response = null;
+
+                var body = ea.Body.ToArray();
+                var props = ea.BasicProperties;
+                var replyProps = _model.CreateBasicProperties();
+                replyProps.CorrelationId = props.CorrelationId;
+
+                try
+                {
+                    var message = Encoding.UTF8.GetString(body);
+                    Console.WriteLine(message);
+                    response = $"Recieved Message {message} CorrelationId: {props.CorrelationId}";
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(" [.] " + e.Message);
+                    response = "";
+                }
+                finally
+                {
+                    var responseBytes = Encoding.UTF8.GetBytes(response);
+                    _model.BasicPublish("", props.ReplyTo, replyProps, body: responseBytes);
+                    _model.BasicAck(ea.DeliveryTag, false);
+                }
+            };
+
+            _model.BasicConsume(queue: Queue,
+                autoAck: true,
+                consumer: consumer);
+
+            Console.WriteLine(" Press [enter] to exit.");
+            Console.ReadLine();
+        }
+
         public void StartWithAck()
         {
             var consumer = new EventingBasicConsumer(_model);
@@ -97,16 +138,12 @@ namespace Example.MQ.Domain
                     var message = Encoding.Default.GetString(basicGet.Body.Span);
                     
                     Console.WriteLine("Message Recieved - {0}", message);
-                    var response = $"Processed message - {message} : Response is good";
 
                     //Send Response
                     var replyProperties = _model.CreateBasicProperties();
                     replyProperties.CorrelationId = basicGet.BasicProperties.CorrelationId;
-                    byte[] messageBuffer = Encoding.Default.GetBytes(response);
                     _model.ExchangeDeclare(basicGet.BasicProperties.ReplyTo, ExchangeType.Direct);
                     _model.QueueDeclare(basicGet.BasicProperties.ReplyTo, false, false, false, null);
-                    _model.QueueBind(basicGet.BasicProperties.ReplyTo, basicGet.BasicProperties.ReplyTo, "RK");
-                    _model.BasicPublish(basicGet.BasicProperties.ReplyTo, "RK", replyProperties, messageBuffer);
                 }
             }
         }

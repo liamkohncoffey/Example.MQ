@@ -6,8 +6,8 @@ namespace RPC.MQ.Client
 {
     class Program
     {
-        private const string Exchange = "OnewayExchange";
-        private const string Queue = "OnewayQueue";
+        private const string Exchange = "RPCExchange";
+        private const string Queue = "RPCQueue";
         
         static void Main()
         {
@@ -22,12 +22,17 @@ namespace RPC.MQ.Client
                 new RabbitMqSetup
                 {
                     Exchange = Exchange,
-                    Queues = new List<string>
+                    QueueMqs = new List<QueuesMq>
                     {
-                        Queue
+                        new QueuesMq
+                        {
+                            Queue = Queue,
+                            RoutingKey = "RK"
+                        }
                     }
                 }
             });
+            sender.InitRpcClient();
             
             Console.WriteLine("Press enter key to send a message");
             
@@ -41,7 +46,7 @@ namespace RPC.MQ.Client
                 {
                     var message =  $"Message: {line} Count:{messageCount}";
                     Console.WriteLine($"Sending - {message}");
-                    sender.SendWithAck(message, Exchange, new TimeSpan(0, 0, 3, 0));
+                    sender.SendWithResponse(message, "RK", Exchange);
                     messageCount++;
                 }
             }

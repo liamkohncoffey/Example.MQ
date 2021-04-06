@@ -1,7 +1,7 @@
 ﻿using System;
 using Example.MQ.Domain;
 
-namespace RPC.MQ.Consumer
+namespace Routing.MQ.Consumer
 {
     class Program
     {

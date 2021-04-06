@@ -22,9 +22,13 @@ namespace Worker.MQ.Client
                 new RabbitMqSetup
                 {
                     Exchange = Exchange,
-                    Queues = new List<string>
+                    QueueMqs = new List<QueuesMq>
                     {
-                        WorkerQueue1
+                        new QueuesMq
+                        {
+                            Queue = WorkerQueue1,
+                            RoutingKey = "RK"
+                        }
                     }
                 }
             });
@@ -39,7 +43,7 @@ namespace Worker.MQ.Client
                 {
                     var message =  $"Message: {line} Count:{messageCount}";
                     Console.WriteLine($"Sending - {message}");
-                    sender.Send(message, Exchange);
+                    sender.Send(message, "RK", Exchange);
                     messageCount++;
                 }
             }
